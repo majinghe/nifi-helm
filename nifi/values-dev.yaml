@@ -1,0 +1,113 @@
+securityContext:
+  runAsUser: 0
+
+replicaCount: 3
+
+image:
+  registry: txo-galaxy-docker-local.artifactory.swg-devops.com
+  repository: nifi/nifi-dev
+  tag: v1.6
+  username: salescda@cn.ibm.com
+  password: KfgXtZNc33YEzBL2
+  pullPolicy: IfNotPresent
+  pullSecret:  artifactory-registry-secret
+
+auth:
+  ldap:
+    enabled: true
+    host: ldap://bluepages.ibm.com:389
+    searchBase: ou=bluepages,o=ibm.com
+    searchFilter: (mail={0})
+    groupSearchBase: ou=memberlist,ou=ibmgroups,o=ibm.com
+    groupObjectClass: groupOfUniqueNames
+    groupSearchFilter: (cn=Optimizer_SVT*)
+    groupMemberAttribute: uniquemember
+    groupNameAttribute: cn 
+    admin: uid=AVPF6K672,c=cn,ou=bluepages,o=ibm.com
+
+
+proxy:
+  host: nifi-dev.optimizer-svt.containers.ciocloudservices.ibm.com
+
+
+ingress:
+  enabled: true
+  annotations:
+    ingress.bluemix.net/ALB-ID: private-crbl5p6krd0v5c9i4n2sdg-alb1;private-crbl5p6krd0v5c9i4n2sdg-alb2
+    ingress.bluemix.net/client-max-body-size: 50m
+    ingress.bluemix.net/redirect-to-https: "True"
+  hosts:
+    - nifi-dev.optimizer-svt.containers.ciocloudservices.ibm.com
+  tls:
+    - secretName: optimizer-tls
+      hosts:
+        - nifi-dev.optimizer-svt.containers.ciocloudservices.ibm.com
+
+
+
+tlsSecrets:
+  crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIGUzCCBTugAwIBAgIDAR2FMA0GCSqGSIb3DQEBCwUAMGoxCzAJBgNVBAYTAlVT
+    MTQwMgYDVQQKEytJbnRlcm5hdGlvbmFsIEJ1c2luZXNzIE1hY2hpbmVzIENvcnBv
+    cmF0aW9uMSUwIwYDVQQDExxJQk0gSU5URVJOQUwgSU5URVJNRURJQVRFIENBMB4X
+    DTE5MTEwNjA1MDAwMFoXDTIyMDIwODA0NTk1OVowgeIxCzAJBgNVBAYTAlVTMRYw
+    FAYDVQQIEw1MaXR0bGV0b24sIE1BMRYwFAYDVQQHEw1MaXR0bGV0b24sIE1BMRAw
+    DgYDVQQKEwdpYm0uY29tMQwwCgYDVQQLEwNJQ1MxQzBBBgNVBAMTOm5pZmktZGV2
+    Lm9wdGltaXplci1zdnQuY29udGFpbmVycy5jaW9jbG91ZHNlcnZpY2VzLmlibS5j
+    b20xGTAXBgoJkiaJk/IsZAEBEwkwNDgxNkE2NzIxIzAhBgoJkiaJk/IsZAEDFhNt
+    YWppbmdoZUBjbi5pYm0uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+    AQEAskD9N4wYvWIUc/rO/zKrArr7CSGD6Qc/lXWjNWRky9kAu8WVlYGVHcoC8wfE
+    ROyRGlVntboPEaIbbHJ4t9PM9DzyRwFVQtoDcJBIkrw6M3VtDeKPVvscqLoDtnUU
+    RrB621sZU4XS6B4qzF6vShP+6QqD9e7HKin5oG+AQBHdCSVG7gYD6E4tCt+LPk5q
+    nhen8J4mEKymyoYdOS4NaKe5JPbyWGsbOs8ytcs67CEUvlihtpZWLH7RayCOG64f
+    pneAf0r750pfUUWL4LsYc3FV6XAzvxx+kc6C0Apik7HgIlsM0lGC2NwnMDE1z+uR
+    jPMnnH3maj0NT7ZXl3iJYTkAOwIDAQABo4IChzCCAoMwRQYDVR0RBD4wPII6bmlm
+    aS1kZXYub3B0aW1pemVyLXN2dC5jb250YWluZXJzLmNpb2Nsb3Vkc2VydmljZXMu
+    aWJtLmNvbTAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsG
+    AQUFBwMCMIHUBgNVHR8EgcwwgckwgYSggYGgf6R9MHsxCzAJBgNVBAYTAlVTMTQw
+    MgYDVQQKEytJbnRlcm5hdGlvbmFsIEJ1c2luZXNzIE1hY2hpbmVzIENvcnBvcmF0
+    aW9uMSUwIwYDVQQDExxJQk0gSU5URVJOQUwgSU5URVJNRURJQVRFIENBMQ8wDQYD
+    VQQDEwZDUkwxNDcwQKA+oDyGOmh0dHA6Ly9kYXltdnMxLnBvay5pYm0uY29tOjIw
+    MDEvUEtJU2Vydi9jYWNlcnRzL0NSTDE0Ny5jcmwwHQYDVR0OBBYEFGPKU3xfFg63
+    Pk7lsxGUTXqE8082MB8GA1UdIwQYMBaAFAYv2seaHz+HUblN0PbarpdGSp3IMIHz
+    BgNVHSAEgeswgegwgeUGBFUdIAAwgdwwdgYIKwYBBQUHAgEWamh0dHA6Ly93My0w
+    My5pYm0uY29tL3RyYW5zZm9ybS9zYXMvYXMtd2ViLm5zZi9Db250ZW50RG9jc0J5
+    VGl0bGUvSW5mb3JtYXRpb24rVGVjaG5vbG9neStTZWN1cml0eStTdGFuZGFyZHMw
+    YgYIKwYBBQUHAgIwVgxUVXNlIG9mIHRoaXMgY2VydGlmaWNhdGUgc2hvdWxkIGFk
+    aGVyZSB0byBJQk0gY29ycG9yYXRlIHN0YW5kYXJkcyBJVENTMTA0IGFuZCBJVENT
+    MzAwMA0GCSqGSIb3DQEBCwUAA4IBAQB7MaqiIjEM/OC0ciY5bWY80WdIp1ik7pdu
+    Xz5vdqtbWomRiyHkfvrpDM0FuERiOuqzKtmnJQlmYaxu5EYnPxP5YF7jzjNxOU8D
+    PbnozpbavzPuFRbkiOZOj/JIUEBLjODg0/Fpvk01sg7ME7kwalxA1goGWetR5QPk
+    OeAoHfWg+UX8f6OiSE4XJ1zgpAo/hXzhx/MCNWNcyYuh4oe9sZD06LkmbWAHjGch
+    ucm/RopbSwvH4sZXViI+kTXOsuOyWf/xgMWLCSNROqyztNVu+wUBoObrUJNmdEjz
+    oGxpjqAP3LL91hSgGBf+wKh9dYu5CEvvdAIWMbiX1JAv8RZl9LrP
+    -----END CERTIFICATE-----
+  key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEowIBAAKCAQEAskD9N4wYvWIUc/rO/zKrArr7CSGD6Qc/lXWjNWRky9kAu8WV
+    lYGVHcoC8wfEROyRGlVntboPEaIbbHJ4t9PM9DzyRwFVQtoDcJBIkrw6M3VtDeKP
+    VvscqLoDtnUURrB621sZU4XS6B4qzF6vShP+6QqD9e7HKin5oG+AQBHdCSVG7gYD
+    6E4tCt+LPk5qnhen8J4mEKymyoYdOS4NaKe5JPbyWGsbOs8ytcs67CEUvlihtpZW
+    LH7RayCOG64fpneAf0r750pfUUWL4LsYc3FV6XAzvxx+kc6C0Apik7HgIlsM0lGC
+    2NwnMDE1z+uRjPMnnH3maj0NT7ZXl3iJYTkAOwIDAQABAoIBAF0ie6tENcDtuAYJ
+    K5JHJPbePz+8FTHyKZSrzESfWdLwZOO3Drr447KW1AerLS9d80qxCOj4d9scuftl
+    rBFQRqvuFCBpX+T4CAgOOvz//+DXH827bG1j8stttXbloVx15RsrdAYhy9qfuHjj
+    l+66l9unNN+QjNtI5zaeS4IuUzDtOwscSWA6CLc9WH4tI6eBWE9PCRBIXD6VZREl
+    jpbMTxkd5rLg7klQ4a/iswfUclY79mZScGThyv017a8Cj1WOiN9nrSnXMDMV+nfj
+    F+ORs3eHSYFrvlwuvDzqelkHAZzWDuuuU71bFSmYqul63o0+2GdFXTtB0c2hMa+3
+    ljdDWpECgYEA6bIT4/66rRniVxFLM8vjjFFrGyF3jeG52M2Ed7wL92FDDKuduHvs
+    saVI3sCVpwBusxzm/iE2PZWJF/ROa0eCyZ5/2VMifhGnwI0Pi21AUYM2YAuIi7tW
+    suwaI9q5B6KKgx4kr9NtQ1l0eywWqrWNqzuruuB640+9p2Im+q8fXycCgYEAw0RL
+    U7f38WQAoUHUPCd/34IjBqIaKgICptkf0LQjQZycFFIWv5ki3eIb6hB8FhX3WsOL
+    ngbAZFpcsSJNnA61FrVeHOaCzht9dJ5vdXgd6kxWcCh3Z/Xf888Dw23ELbbTsdaG
+    wJosaGMBxoLVVcmOFZCM/xwicxdhIsvwhE/4gs0CgYA4Sma0ImWA0J1Ob6H3pgL3
+    h50O+e68RETpzgc8eBVBzzHBWY0yJNeMqs10qlrh0R7ZEfsp94IDL4PIO1awTJda
+    TU1qYbYLO+F2ZgP6h6RYfgyY8e5ACi4GBwz82fB7wFEw6A/aMkk9UczW5nXHRNgN
+    COCCsROosUpziRbuh0Q9PQKBgQCjH8GB7dUvDmjMTi8cFa9oq9HQ78jFwSov8oD2
+    nBY78LYe77jbVPXgwMyrDBxtYupiI6vWVzOQYkC/JbYKIes8TkWSBSvPPP3gV58r
+    Vi4/log7aELgUXJGvnEZaPCTdAGDtoCaE/H3Poa0LIZGBXwyHbD8Saep2CUoqZCD
+    KD+mHQKBgB5jM8tO7HnjN0sZY5Afw+BeBpH42AEQvZwzIZ492uvSjhHh4rQ2fCBK
+    95fvM6IRJAtAuiGFbFjBIwmO2KwCXqfZTBAjnEkkB3liX+DRADWxsBm7OdDExbBE
+    E6ogunJOukeBEwSEL30D2XDK/lafJmpCsKBImtnSlQlZ1uTktE/G
+    -----END RSA PRIVATE KEY-----

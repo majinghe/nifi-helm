@@ -1,0 +1,122 @@
+---
+replicaCount: 3
+
+image:
+  registry: ""
+  repository: ""
+  tag: ""
+  username: ""
+  password: ""
+  pullPolicy: IfNotPresent
+  pullSecret:  ""
+
+auth:
+  ldap:
+    enabled: true
+    host: ""
+    searchBase: ""
+    searchFilter: ""
+    groupSearchBase: ""
+    groupObjectClass: ""
+    groupSearchFilter: ""
+    groupMemberAttribute: ""
+    groupNameAttribute: ""
+    admin: ""
+
+
+securityContext:
+  runAsUser: 1000
+  fsGroup: 1000
+
+sts:
+  podManagementPolicy: Parallel
+  AntiAffinity: soft
+  hostPort: null
+
+properties:
+  externalSecure: false
+  isNode: true
+  enableSsl: true
+  cachePort: 4557
+  jobPort: 8008
+  httpPort: 8080
+  httpsPort: 8443
+  clusterPort: 6007
+  clusterSecure: true
+  needClientAuth: false
+  provenanceStorage: "8 GB"
+  siteToSite:
+    secure: true
+    port: 10443
+  authorizer: managed-authorizer
+
+## Expose the nifi service to be accessed from outside the cluster (LoadBalancer service).
+## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.
+## ref: http://kubernetes.io/docs/user-guide/services/
+##
+service:
+  headless:
+    type: ClusterIP
+    port: 80
+  clusterip:
+    type: ClusterIP
+    port: 8443
+## Configure Ingress based on the documentation here: https://kubernetes.io/docs/concepts/services-networking/ingress/
+##
+
+#config the ingress info
+ingress:
+  enabled: false
+  annotations: {}
+  tls: []
+  hosts: []
+  path: /
+
+# The cert and key file to create tls secret used by ingress
+tlsSecrets:
+  crt: | your cert file content
+  key: | your key file content
+
+# Amount of memory to give the NiFi java heap
+jvmMemory: 4g
+
+# Separate image for tailing each log separately
+sidecar:
+  image: dllhb/debug-tool:v0.2
+
+## Enable persistence using Persistent Volume Claims
+## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+##
+persistence:
+  enabled: true
+  storageClass: ""
+  accessModes:  [ReadWriteMany]
+  dataStorage:
+    size: ""
+  logStorage:
+    size: ""
+
+resources:
+  limits:
+   cpu: 5000m
+   memory: 10240Mi
+  requests:
+   cpu: 3000m
+   memory: 8192Mi
+
+logresources:
+  requests:
+    cpu: 10m
+    memory: 10Mi
+  limits:
+    cpu: 50m
+    memory: 50Mi
+
+zookeeper:
+  ## If true, install the Zookeeper chart
+  ## ref: https://github.com/kubernetes/charts/tree/master/incubator/zookeeper
+  enabled: true
+
+  ## If the Zookeeper Chart is disabled a URL and port are required to connect
+  url: ""
+  port: 2181
