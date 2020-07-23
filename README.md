@@ -10,3 +10,6 @@ The nifi helm chart works fine on IBM Cloud with ssl &amp; ldap
 ```
 helm install nifi . --namespace nifi
 ```
+# F&Q
+
+Any question, you can send mail to <devops008@sina.com> to ask help. Thanks a lot.
