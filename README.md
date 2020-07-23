@@ -1,6 +1,11 @@
 # Helm Chart instructions for Apache Nifi 
 The nifi helm chart works fine on IBM Cloud with ssl &amp; ldap
 
+## Nifi version
+
+* 1.9.2
+* 1.11.4
+
 ## Installation
 
 * Clone the repo into your local PC
