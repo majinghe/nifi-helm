@@ -1,14 +1,16 @@
 pull_request_rules:
   - name: Automatic merge when approved by lhb008
     conditions:
-      - "approved-reviews-by=lhb0008"
+      - "approved-reviews-by=lhb008"
+      - "#approved-reviews-by>=1"
       - base=master
     actions:
       merge:
         method: merge
   - name: Automatic merge on approval
     conditions:
-      - "approved-reviews-by>=baili-baili"
+      - "approved-reviews-by=baili-baili"
+      - "#approved-reviews-by>=1"
       - base=master
     actions:
       merge:
